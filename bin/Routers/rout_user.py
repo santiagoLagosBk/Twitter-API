@@ -6,7 +6,14 @@ from fastapi import Form,Body
 
 # Python
 from typing import Optional
+from uuid import uuid4
 
+
+# Controller
+from bin.Controllers.control_user import Controller_user
+
+# Model
+from bin.Models.model_user import UserLogin,UserBase
 
 
 user_route = APIRouter()
@@ -17,8 +24,14 @@ def home():
 
 
 @user_route.post(path="/Signup",tags=["User"],status_code=status.HTTP_201_CREATED)
-def create_user():
-    pass
+
+def create_user(user: UserLogin = Body(...)):
+    controller = Controller_user()
+
+    user_in_db = UserBase(**user.dict())
+    result = controller.create_user(user_in_db.dict())
+    
+    return result
 
 
 @user_route.get(path="/users/",status_code=status.HTTP_200_OK)
