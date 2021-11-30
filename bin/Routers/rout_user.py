@@ -1,12 +1,14 @@
 # FastApi
 from fastapi import APIRouter
 from fastapi import status
-from fastapi import Form,Body
+from fastapi import Form,Body,Path
 
 
 # Python
 from typing import Optional
 from uuid import uuid4
+
+
 
 
 # Controller
@@ -34,9 +36,20 @@ def create_user(user: UserLogin = Body(...)):
     return result
 
 
-@user_route.get(path="/users/",status_code=status.HTTP_200_OK)
-def get_user(user:Optional[str] = None):
-    if not user:
-        pass
-    
+@user_route.get(path="/users/",tags=["User"],status_code=status.HTTP_200_OK)
+def get_user(nickname:Optional[str] = None):
+    controller = Controller_user()
+
+    if not nickname:
+        return {"Users":controller.get_all_users()}
+    else:
+        return {"User":controller.get_user(nickname)}
+
+
+@user_route.delete(path="/accont/{id}",tags=["User"],status_code=status.HTTP_202_ACCEPTED)
+def delete_user(id:str = Path(...,min_length=8,max_length=60)):
+
+    controller = Controller_user()
+    return controller.delete(id)
+
 
