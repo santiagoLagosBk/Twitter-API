@@ -13,7 +13,7 @@ DATETIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 from bin.Models.model_user import User
 
 
-class ShowTweet(BaseModel):
+class Basic_Tweet(BaseModel):
 
     content: str = Field(
         ...,
@@ -23,10 +23,13 @@ class ShowTweet(BaseModel):
     create_at: datetime = Field(default=datetime.now().strftime(DATETIME_FORMAT))
     update_at: Optional[datetime] = Field(default=datetime.now().strftime(DATETIME_FORMAT))
 
-class db_Tweet(ShowTweet):
+class Db_Tweet(Basic_Tweet):
     id: UUID = Field(...)
     create_by: str = Field(...)
-    
+
+
+class Show_Tweet(Basic_Tweet):
+    create_by: User = Field(...)
 
 
 
