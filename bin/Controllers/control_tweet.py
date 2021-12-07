@@ -67,4 +67,17 @@ class Controller_tweet:
             result = Show_Tweet(**twitter_dict)
             return result
         else:
-            pass
+
+            tweets = conn.execute(Tweet.select())
+            all_tweets = []
+            for tweet in tweets:
+                tweetdb = Db_Tweet(**tweet)
+                user_id = tweetdb.dict()["create_by"]
+                tweet_user = conn.execute(select(user_fields).where(user_query.c.id == user_id)).first()
+                create_by = User(**tweet_user)
+                tweet_dict = tweetdb.dict()
+                tweet_dict.update({"create_by":create_by.dict()})
+
+                result = Show_Tweet(**tweet_dict)
+                all_tweets.append(result)
+            return all_tweets
